@@ -1,0 +1,59 @@
+
+
+{% extends "index.html" %}
+
+{% block content %}
+
+
+
+<div class="table-responsive" >
+    <div >
+        <form class="form" action="add_fiend" method="POST">
+            <input class="form-control col-md-3" type="text" name="username">
+            <button type="submit" class="btn btn-success">Додати друга</button>
+        </form>
+    </div>
+
+    {% if friends|length > 0 %}
+
+    <H1>Заявки на добавление</H1>
+
+        <table class="table">
+            <tbody>
+                {% for friend in friends %}
+                    <tr>
+                        <td> {{friend.name + " " + friend.surname}} </td>
+                        <td> </td>
+                        <td>
+                            <button type="button" class="btn btn-danger" name="btn_deny_friend" data-person_id="{{friend.id}}">Отклонить</button>
+                            <button type="button" class="btn btn-success" name="btn_except_friend" data-person_id="{{friend.id}}">Добавить</button>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+
+
+    <H1>Друзья</H1>
+
+    <table class="table">
+        <tbody>
+            {% for person in persons %}
+                <tr >
+                    <td> {{person.name + " " + person.surname}} </td>
+                    <td> {{"Номер карты: " + person.card}} </td>
+                    <td>
+                        <button type="button" class="btn btn-danger" name="btn_delete_friend" data-person_id="{{person.id}}">Удалить</button>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/friend.js') }}"></script>
+
+{% endblock %}

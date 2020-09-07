@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Workshop</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+{#    <script src="{{ url_for('static', filename='js/jquery-3.4.1.min.js') }}"></script>#}
+{#    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>#}
+
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap_new.min.css') }}">
+    <script src="{{ url_for('static', filename='js/jquery_new.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap_new.min.js') }}"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap-multiselect.css') }}">
+    <script src="{{ url_for('static', filename='js/bootstrap-multiselect.js') }}"></script>
+
+</head>
+<body>
+
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+
+  <div class="navbar-header">
+        <a class="navbar-brand" href="https://github.com/dimon19991">Dmytro Koltsov</a>  <!-- Посилання на репозиторій з кодом !-->
+  </div>
+
+
+
+
+  <ul class="navbar-nav" style="width: 100%;">
+
+    {% if current_user.is_authenticated %}
+        <li class="nav-item"><a class="nav-link" href="/person">Моя страница</a></li>
+        <li class="nav-item"><a class="nav-link" href="/friends">Друзья</a></li>
+        <li class="nav-item"><a class="nav-link" href="/events">События</a></li>
+        <li class="nav-item"><a class="nav-link" href="/checks">Чеки</a></li>
+        <li class="nav-item" style="margin-left: auto"><a class="nav-link" href="/logout">Sign out</a></li>
+    {% else %}
+        <li class="nav-item" style="margin-left: auto"><a class="nav-link" href="/login">Sign in</a></li>
+    {% endif %}
+  </ul>
+
+</nav>
+
+<div class="container">
+
+
+    {% if current_user.has_role('Admin') %}
+        {% set stat = "Admin page" %}
+    {% elif current_user.has_role('Ban') %}
+        {% set stat = current_user.message %}
+    {% else %}
+        {% set stat = "Welcome page" %}
+    {% endif %}
+
+    {% block content %}<h1>{{ stat }}</h1>{% endblock %}
+
+</div>
+
+</body>
+</html>

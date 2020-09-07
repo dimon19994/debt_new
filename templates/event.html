@@ -1,0 +1,39 @@
+
+
+{% extends "index.html" %}
+
+{% block content %}
+
+
+
+ <div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th> Событие </th>
+                <th> Место </th>
+                <th> Дата </th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for event in events %}
+            <tr >
+                <td> {{event.name}} </td>
+                <td> {{event.place}} </td>
+                <td> {{event.date}} </td>
+                <td>
+                    <button type="button" class="btn btn-success" name="btn_new_check" data-event_id="{{event.id}}">Добавить чек</button>
+                    <button type="button" class="btn btn-primary" name="btn_detail_event" data-event_id="{{event.id}}">Подробнее</button>
+                    <button type="button" class="btn btn-warning" name="btn_edit_event" data-event_id="{{event.id}}">Редактировать</button>
+                    <button type="button" class="btn btn-danger" name="btn_delete_event" data-event_id="{{event.id}}">Удалить</button>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+ </div>
+    <button type="button" class="btn btn-success" name="btn_new_event">Новое событие</button>
+
+    <script src="{{ url_for('static', filename='js/event.js') }}"></script>
+
+{% endblock %}

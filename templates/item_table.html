@@ -1,0 +1,44 @@
+
+
+{% extends "index.html" %}
+
+{% block content %}
+
+
+
+    <div class="table-responsive">
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Чек</th>
+            <th scope="col">Продукт</th>
+            {% if flag == "category" %}
+                <th scope="col">Имя Фамилия</th>
+            {% elif flag == "person" %}
+                <th scope="col">Категория</th>
+            {% endif %}
+            <th scope="col">Сумма</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        {% for i in details %}
+            <tr>
+                <td>{{ i.description }}</td>
+                <td>{{ i.name }}</td>
+                {% if flag == "category" %}
+                    <td>{{ i.pname + " " + i.surname }}</td>
+                {% elif flag == "person" %}
+                    <td>{{ i.category }}</td>
+                {% endif %}
+                <td>{{ i.sum|round(2) }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <button type="button" class="btn btn-primary" name="btn_detail_event" data-event_id="{{event_id}}">Назад</button>
+
+    <script src="{{ url_for('static', filename='js/event.js') }}"></script>
+
+{% endblock %}

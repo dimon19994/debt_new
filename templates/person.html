@@ -1,0 +1,108 @@
+
+
+{% extends "index.html" %}
+
+{% block content %}
+
+
+
+    <div class="table-responsive">
+        <table class="table">
+            <tbody>
+            {% for person in persons %}
+                <tr>
+                    <td> {{ person.name + " " + person.surname }} </td>
+                    <td> {{ "Номер карты: " + person.card }} </td>
+                    <td>
+                        <button type="button" class="btn btn-warning" name="btn_edit_person"
+                                data-person_id="{{ person.id }}">Edit
+                        </button>
+                        <button type="button" class="btn btn-danger" name="btn_delete_person"
+                                data-person_id="{{ person.id }}">Delete
+                        </button>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+
+        {% if repay|length > 0 %}
+        <H2>Возврат долгов</H2>
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Событие</th>
+                <th scope="col">Должник</th>
+                <th scope="col">Сумма</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for i in repay %}
+                <tr>
+                    <td> {{ i[2] }} </td>
+                    <td> {{ i[3] + " " + i[4] }} </td>
+                    <td> {{ i[0]|round(2) }} </td>
+                    <td>
+                        <button type="button" class="btn btn-success" name="btn_except_repay" data-repay_id="{{i.id}}">Принять</button>
+                        <button type="button" class="btn btn-danger" name="btn_deny_repay" data-repay_id="{{ i.id }}">Отклонить</button>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <br>
+        {% endif %}
+
+        {% if i_debt|length > 0 %}
+        <H2>Долги</H2>
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Событие</th>
+                <th scope="col">Я должен</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for i in i_debt %}
+                <tr>
+                    <td> {{ i.name }} </td>
+                    <td> {{ i.count|round(2) }} </td>
+                    <td>
+                        <button type="button" class="btn btn-primary" name="btn_detail_event" data-event_id="{{i.id}}">Подробнее</button>
+                        <button type="button" class="btn btn-success" name="btn_repay" data-event_id="{{ i.id }}">Вернуть долг</button>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <br>
+        {% endif %}
+
+        {% if me_debt|length > 0 %}
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Событие</th>
+                <th scope="col">Мне должны</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for i in me_debt %}
+                <tr>
+                    <td> {{ i.name }} </td>
+                    <td> {{ -1*i.count|round(2) }} </td>
+                    <td>
+                        <button type="button" class="btn btn-primary" name="btn_detail_event" data-event_id="{{i.id}}">Подробнее</button>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+
+    </div>
+
+    <script src="{{ url_for('static', filename='js/person.js') }}"></script>
+
+{% endblock %}

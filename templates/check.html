@@ -1,0 +1,39 @@
+
+
+{% extends "index.html" %}
+
+{% block content %}
+
+
+
+ <div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Описание чека</th>
+                <th scope="col">Дата события</th>
+                <th scope="col">Название события</th>
+                <th scope="col">Сумма чека</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for check in checks %}
+            <tr >
+                <td> {{check.description}} </td>
+                <td> {{check.date}} </td>
+                <td> {{check.name}} </td>
+                <td> {{check.sum}} </td>
+                <td>
+                    <button type="button" class="btn btn-primary" name="btn_detail_check" data-check_id="{{check.id}}">Подробнее</button>
+                    <button type="button" class="btn btn-warning" name="btn_edit_check" data-check_id="{{check.id}}">Редактировать</button>
+                    <button type="button" class="btn btn-danger" name="btn_delete_check" data-check_id="{{check.id}}">Удалить</button>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+ </div>
+
+    <script src="{{ url_for('static', filename='js/check.js') }}"></script>
+
+{% endblock %}

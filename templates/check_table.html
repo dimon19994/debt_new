@@ -1,0 +1,59 @@
+
+
+{% extends "index.html" %}
+
+{% block content %}
+
+
+
+ <div class="table-responsive">
+    <table class="table">
+         <thead>
+            <tr>
+                <th scope="col">Продукт</th>
+                <th scope="col">Цена</th>
+                {% for person in people %}
+                    <th scope="col">{{ person.name+" "+person.surname }}</th>
+                {% endfor %}
+                <th scope="col">Категория</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            {% for j in range(items|length) %}
+                <tr >
+                    <td> {{items[j].name}} </td>
+                    <td> {{items[j].cost}} </td>
+                    {% for i in range(people|length) %}
+                        <td>{{ debt[j*people|length+i][0]|round(2)}}</td>
+                    {% endfor %}
+                    <td>{{ items[j].category }}</td>
+
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <H1>Платил</H1>
+    <table class="table">
+         <thead>
+            <tr>
+                <th scope="col">Имя Фпмилия</th>
+                <th scope="col">Цена</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for i in pay %}
+                <tr>
+                    <td scope="col">{{ i.name+" "+i.surname }}</td>
+                    <td scope="col">{{ i.sum }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+ </div>
+
+    <script src="{{ url_for('static', filename='js/event.js') }}"></script>
+
+{% endblock %}

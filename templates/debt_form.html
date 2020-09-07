@@ -1,0 +1,64 @@
+
+
+{% extends "index.html" %}
+
+{% block content %}
+
+    <!--https://www.codeply.com/go/nhbdi2FkJm-->
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10 mx-auto">
+
+                <!-- form card login -->
+                <div class="card rounded-0">
+
+                    <div class="card-header">
+                        <h3 class="mb-0">{{ form_name }}</h3>
+                    </div>
+                    <div class="card-body">
+
+                        <form class="form" action="/{{ action }}/{{ id }}" method=post enctype="multipart/form-data">
+
+                            <table class="col-md-auto mx-auto">
+                                <tr>
+                                    <td></td>
+                                    {% for person in people %}
+                                        <td style="padding: 0 20px; text-align: center">{{ person.name + " " + person.surname }}</td>
+                                    {% endfor %}
+                                    <td style="padding: 0 20px; text-align: center">На всех</td>
+                                </tr>
+                                {% for j in range(items|length) %}
+                                    <tr>
+                                        <td>{{ items[j].name }}
+                                            {{ form.item_id[j] }}
+                                        </td>
+
+                                        {% for i in range(people|length) %}
+                                            <td>{{ form.debt_count[(people|length)*j + i](class_="form-control") }}</td>
+                                        {% endfor %}
+                                        <td>{{ form.debt_all[j](class_="form-control") }}</td>
+                                        {% if form.debt_errors[j] %}
+                                            <td class="alert alert-danger" role="alert">
+                                                {{ form.debt_errors[j] }}
+                                            </td>
+                                        {% endif %}
+                                    </tr>
+                                {% endfor %}
+
+                            </table>
+
+                            {{ form.submit(class_="btn btn-success") }}
+
+                        </form>
+                    </div>
+                    <!--/card-block-->
+                </div>
+                <!-- /form card login -->
+
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/check_form.js') }}"></script>
+
+{% endblock %}

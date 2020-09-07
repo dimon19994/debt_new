@@ -1,0 +1,113 @@
+
+
+{% extends "index.html" %}
+
+{% block content %}
+
+
+
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col"></th>
+                <th scope="col">Закинул</th>
+                <th scope="col">Вернули</th>
+                <th scope="col">Потратил</th>
+                <th scope="col">Должен</th>
+                {% for category in categories %}
+                    <th scope="col"><a href="/detail_item?event_id={{ id }}&category={{ category[0] }}">{{ category[0] }}</a></th>
+                {% endfor %}
+            </tr>
+            </thead>
+            <tbody>
+
+            {% for i in range(people|length) %}
+                <tr>
+                    <th> <a href="/detail_item?event_id={{ id }}&person_id={{ people[i].id }}">{{ people[i].name }}</a> </th>
+                        <td>{{ (pay[i][0] + who_repay[i][0])|round(2) }}</td>
+                        <td>{{ whom_repay[i][0]|round(2) }}</td>
+                        <td>{{ all_debts[i][0]|round(2) }}</td>
+                        {% set debts = (all_debts[i][0] - pay[i][0]) +
+                                whom_repay[i][0] - who_repay[i][0] %}
+
+                    {% if debts < -1 %}
+                        <td style="background-color: #9ee8a0">
+                            {{ debts|round(2) }}
+                        </td>
+                    {% elif debts > 1 %}
+                        <td style="background-color: #e8a09e">
+                            {{ debts|round(2) }}
+                        </td>
+                    {% else %}
+                        <td style="background-color: #a09ee8">
+                            {{ debts|round(2) }}
+                        </td>
+                    {% endif %}
+
+                    {% for j in range(categories|length) %}
+                        <td><a href="/detail_item?event_id={{ id }}&category={{ categories[j][0] }}&person_id={{ people[i].id }}">{{ debt[i*categories|length + j][0]|round(2) }}</a></td>
+                    {% endfor %}
+
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+
+    <button type="button" class="btn btn-success" name="btn_repay" data-event_id="{{ id }}">Вернуть долг</button>
+
+    {% if repay|length > 0 %}
+        <H2>Возврат долгов</H2>
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Событие</th>
+                <th scope="col">Должник</th>
+                <th scope="col">Сумма</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for i in repay %}
+                <tr>
+                    <td> {{ i[2] }} </td>
+                    <td> {{ i[3] + " " + i[4] }} </td>
+                    <td> {{ i[0]|round(2) }} </td>
+                    <td>
+                        <button type="button" class="btn btn-success" name="btn_except_repay" data-repay_id="{{i.id}}">Принять</button>
+                        <button type="button" class="btn btn-danger" name="btn_deny_repay" data-repay_id="{{ i.id }}">Отклонить</button>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <br>
+        {% endif %}
+
+        {% if repay_all|length > 0 %}
+        <H2>Возврат долгов</H2>
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Кто вернул</th>
+                <th scope="col">Кому вернули</th>
+                <th scope="col">Сумма</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for i in repay_all %}
+                <tr>
+                    <td> {{ i[3] + " " + i[4] }} </td>
+                    <td> {{ i[1] + " " + i[2] }} </td>
+                    <td> {{ i[0]|round(2) }} </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <br>
+        {% endif %}
+
+    <script src="{{ url_for('static', filename='js/event.js') }}"></script>
+
+{% endblock %}
