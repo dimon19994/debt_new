@@ -127,9 +127,9 @@
                                         {% if i == 0 %}
                                             <td>
                                                 {{ form.check_sum[i](class_="form-control pay", readonly="readonly") }}
-                                                {% if form.check_item[i].errors %}
+                                                {% if form.check_sum[i].errors %}
                                                     <div class="alert alert-danger" role="alert">
-                                                        {% for message in form.check_item[i].errors %}
+                                                        {% for message in form.check_sum[i].errors %}
                                                             <div>{{ message }}</div>
                                                         {% endfor %}
                                                     </div>
@@ -148,9 +148,9 @@
                                         {% else %}
                                             <td>
                                                 {{ form.check_sum[i](class_="form-control pay") }}
-                                                {% if form.check_item[i].errors %}
+                                                {% if form.check_sum[i].errors %}
                                                     <div class="alert alert-danger" role="alert">
-                                                        {% for message in form.check_item[i].errors %}
+                                                        {% for message in form.check_sum[i].errors %}
                                                             <div>{{ message }}</div>
                                                         {% endfor %}
                                                     </div>
