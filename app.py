@@ -282,6 +282,9 @@ def events():
 def detail_event():
     events_id = request.args.get('event_id')
 
+    event_name = db.session.query(OrmEvent.name). \
+            filter(OrmEvent.id == events_id).one()
+
     participant_id = \
         db.session.query(OrmUser.id, OrmUser.name). \
             join(OrmParticipant, OrmParticipant.c.person_id == OrmUser.id). \
@@ -367,7 +370,7 @@ def detail_event():
     if len(categories) > 0:
         return render_template('event_table.html', people=participant_id, pay=pay_info, debt=categorical_debt,
                                categories=categories, all_debts=all_debt, id=events_id, who_repay=who_repay,
-                               whom_repay=whom_repay, repay=repay, repay_all=repay_all)
+                               whom_repay=whom_repay, repay=repay, repay_all=repay_all, event_name=event_name)
     else:
         return render_template('event_table_none.html')
 
@@ -660,6 +663,10 @@ def new_debt(id):
 def detail_check():
     check_id = request.args.get('check_id')
 
+    names = db.session.query(OrmEvent.name, OrmCheck.description). \
+        join(OrmCheck, OrmCheck.event_id == OrmEvent.id). \
+        filter(OrmCheck.id == check_id).one()
+
     items = db.session.query(OrmItem). \
         join(OrmCheck, OrmCheck.id == OrmItem.check_id). \
         filter(OrmCheck.id == check_id).order_by(OrmItem.id).all()
@@ -687,7 +694,7 @@ def detail_check():
         join(OrmUser, OrmUser.id == OrmPay.person_id). \
         filter(OrmPay.check_id == check_id).all()
 
-    return render_template('check_table.html', items=items, debt=debt, people=people, pay=pay)
+    return render_template('check_table.html', items=items, debt=debt, people=people, pay=pay, names=names)
 
 
 @app.route('/new_repay', methods=['GET', 'POST'])
