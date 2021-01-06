@@ -67,7 +67,7 @@
             {% for i in i_debt %}
                 <tr>
                     <td> {{ i.name }} </td>
-                    <td> {{ i.count|round(2) }} </td>
+                    <td> {{ i.sum|round(2) }} </td>
                     <td>
                         <button type="button" class="btn btn-primary" name="btn_detail_event" data-event_id="{{i.id}}">Подробнее</button>
                         <button type="button" class="btn btn-success" name="btn_repay" data-event_id="{{ i.id }}">Вернуть долг</button>
@@ -91,7 +91,7 @@
             {% for i in me_debt %}
                 <tr>
                     <td> {{ i.name }} </td>
-                    <td> {{ -1*i.count|round(2) }} </td>
+                    <td> {{ -1*i.sum|round(2) }} </td>
                     <td>
                         <button type="button" class="btn btn-primary" name="btn_detail_event" data-event_id="{{i.id}}">Подробнее</button>
                     </td>
