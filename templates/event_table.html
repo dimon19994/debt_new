@@ -16,9 +16,11 @@
                 <th scope="col">Вернули</th>
                 <th scope="col">Потратил</th>
                 <th scope="col">Должен</th>
-                {% for category in categories %}
-                    <th scope="col"><a href="/detail_item?event_id={{ id }}&category={{ category[0] }}">{{ category[0] }}</a></th>
-                {% endfor %}
+                {% if event_name != "Объединение чеков"%}
+                    {% for category in categories %}
+                        <th scope="col"><a href="/detail_item?event_id={{ id }}&category={{ category[0] }}">{{ category[0] }}</a></th>
+                    {% endfor %}
+                {% endif %}
             </tr>
             </thead>
             <tbody>
@@ -45,10 +47,11 @@
                             {{ debts|round(2) }}
                         </td>
                     {% endif %}
-
-                    {% for j in range(categories|length) %}
-                        <td><a href="/detail_item?event_id={{ id }}&category={{ categories[j][0] }}&person_id={{ people[i].id }}">{{ debt[i*categories|length + j][0]|round(2) }}</a></td>
-                    {% endfor %}
+                    {% if event_name != "Объединение чеков"%}
+                        {% for j in range(categories|length) %}
+                            <td><a href="/detail_item?event_id={{ id }}&category={{ categories[j][0] }}&person_id={{ people[i].id }}">{{ debt[i*categories|length + j][0]|round(2) }}</a></td>
+                        {% endfor %}
+                    {% endif %}
 
                 </tr>
             {% endfor %}

@@ -20,6 +20,12 @@ $("button[name='btn_detail_event']").click(function() {
 
 });
 
+$("button[name='btn_detail_event_total']").click(function() {
+
+    window.location = "detail_event?event_id=0";
+
+});
+
 $("button[name='btn_new_event']").click(function() {
 
     window.location = "new_event";
