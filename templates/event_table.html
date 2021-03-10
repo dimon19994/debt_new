@@ -34,11 +34,11 @@
                         {% set debts = (all_debts[i][0] - pay[i][0]) +
                                 whom_repay[i][0] - who_repay[i][0] %}
 
-                    {% if debts < -1 %}
+                    {% if debts < -5 %}
                         <td style="background-color: #9ee8a0">
                             {{ debts|round(2) }}
                         </td>
-                    {% elif debts > 1 %}
+                    {% elif debts > 5 %}
                         <td style="background-color: #e8a09e">
                             {{ debts|round(2) }}
                         </td>
