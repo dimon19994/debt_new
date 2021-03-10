@@ -334,8 +334,8 @@ def events():
 @login_required
 def detail_event():
     events_id = request.args.get('event_id')
-    date_from = '2021-01-02'
-    date_to = '2021-02-28'
+    date_from = '2021-02-01'
+    date_to = '2021-04-15'
 
     if events_id != "0":
         event_name = db.session.query(OrmEvent.name). \
