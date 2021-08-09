@@ -30,9 +30,16 @@
                         <td>{{ debt[j*people|length+i][0]|round(2)}}</td>
                     {% endfor %}
                     <td>{{ items[j].category }}</td>
-
                 </tr>
             {% endfor %}
+            <tr>
+                <td>Итоги</td>
+                <td></td>
+                {% for i in range(people|length) %}
+                    <td>{{ totals[i][0]|round(2)}}</td>
+                {% endfor %}
+                <td></td>
+            </tr>
         </tbody>
     </table>
 

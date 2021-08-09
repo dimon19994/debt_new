@@ -843,6 +843,16 @@ def detail_check():
         filter(and_(OrmItem.check_id == check_id, sub_debt.c.id == OrmItem.id)). \
         order_by(sub_debt.c.id, OrmParticipant.c.person_id).all()
 
+    debt_totals = db.session.query(func.sum(sub_debt.c.costs / sub_debt.c.sums * func.coalesce(OrmDebt.sum, 0)),
+                        OrmParticipant.c.person_id). \
+        join(OrmEvent, OrmEvent.id == OrmParticipant.c.event_id). \
+        join(OrmCheck, OrmCheck.event_id == OrmEvent.id). \
+        join(OrmItem, OrmItem.check_id == OrmCheck.id). \
+        outerjoin(OrmDebt, and_(OrmDebt.item_id == OrmItem.id, OrmDebt.person_id == OrmParticipant.c.person_id)). \
+        filter(and_(OrmItem.check_id == check_id, sub_debt.c.id == OrmItem.id)). \
+        group_by(OrmParticipant.c.person_id).\
+        order_by(OrmParticipant.c.person_id).all()
+
     people = db.session.query(OrmUser). \
         join(OrmParticipant, OrmParticipant.c.person_id == OrmUser.id). \
         join(OrmEvent, OrmParticipant.c.event_id == OrmEvent.id). \
@@ -853,7 +863,8 @@ def detail_check():
         join(OrmUser, OrmUser.id == OrmPay.person_id). \
         filter(OrmPay.check_id == check_id).all()
 
-    return render_template('check_table.html', items=items, debt=debt, people=people, pay=pay, names=names)
+    return render_template('check_table.html', items=items, debt=debt, people=people, pay=pay, names=names,
+                           totals=debt_totals)
 
 
 @app.route('/new_repay', methods=['GET', 'POST'])
