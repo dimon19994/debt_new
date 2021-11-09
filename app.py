@@ -15,6 +15,7 @@ from forms.debt_form import DebtForm
 from forms.event_form import EventForm
 from forms.person_form import PersonForm
 from forms.repay_form import RepayForm
+from forms.event_union_form import EventUnionForm
 
 app = Flask(__name__)
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:01200120@localhost/debt_manager'
@@ -320,22 +321,22 @@ def add_fiend():
     return redirect(url_for('friends'))
 
 
-@app.route('/events', methods=['GET'])
+@app.route('/events', methods=['GET', 'POST'])
 @login_required
 def events():
+    form = EventUnionForm()
+
     result = db.session.query(OrmEvent).join(OrmParticipant).filter(
         and_(OrmEvent.id == OrmParticipant.c.event_id, OrmParticipant.c.person_id == current_user.id)). \
         order_by(OrmEvent.date.desc()).all()
 
-    return render_template('event.html', events=result)
+    return render_template('event.html', events=result, form=form, action="detail_event")
 
 
 @app.route('/detail_event', methods=['GET', 'POST'])
 @login_required
 def detail_event():
     events_id = request.args.get('event_id')
-    date_from = '2021-02-01'
-    date_to = '2021-04-15'
 
     if events_id != "0":
         event_name = db.session.query(OrmEvent.name). \
@@ -428,7 +429,18 @@ def detail_event():
             subquery1.c.debt).all()
 
     else:
+        if request.method == "POST":
+            form = EventUnionForm()
+
+            result = db.session.query(OrmEvent).join(OrmParticipant).filter(
+                and_(OrmEvent.id == OrmParticipant.c.event_id, OrmParticipant.c.person_id == current_user.id)). \
+                order_by(OrmEvent.date.desc()).all()
+
+            if not form.validate():
+                return render_template('event.html', events=result, form=form, action="detail_event")
         event_name = "Объединение чеков"
+        date_from = form.start_date.data
+        date_to = form.end_date.data
 
         participant_id = \
             db.session.query(OrmUser.id, OrmUser.name). \

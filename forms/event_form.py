@@ -1,8 +1,9 @@
 from flask_wtf import Form
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField, DateField, HiddenField, IntegerField, SelectField
+from wtforms import StringField, SubmitField, PasswordField, HiddenField, IntegerField, SelectField
 from flask_wtf.file import FileField
 from wtforms import validators
+from wtforms.fields.html5 import DateField
 
 
 class EventForm(Form):
@@ -18,7 +19,7 @@ class EventForm(Form):
         validators.Length(3, 20, "Place should be from 3 to 20 symbols")
     ])
 
-    event_date = DateField("Birthday: ", [validators.DataRequired("Please enter your birthday.")])
+    event_date = DateField("Birthday: ", [validators.DataRequired("Please enter your birthday.")], format="%Y-%m-%d")
 
     event_friends = SelectField("Birthday: ", coerce=int)
 
