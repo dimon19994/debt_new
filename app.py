@@ -442,11 +442,17 @@ def detail_event():
         date_from = form.start_date.data
         date_to = form.end_date.data
 
+        events_id = \
+            db.session.query(OrmEvent.id). \
+                join(OrmParticipant, OrmEvent.id == OrmParticipant.c.event_id). \
+                filter(and_(OrmEvent.date.between(date_from, date_to), OrmParticipant.c.person_id == 34)). \
+                group_by(OrmEvent.id)
+
         participant_id = \
             db.session.query(OrmUser.id, OrmUser.name). \
                 join(OrmParticipant, OrmParticipant.c.person_id == OrmUser.id). \
                 join(OrmEvent, OrmEvent.id == OrmParticipant.c.event_id). \
-                filter(OrmEvent.date.between(date_from, date_to)). \
+                filter(OrmEvent.id.in_(events_id)). \
                 group_by(OrmUser.id, OrmUser.name).\
                 order_by(OrmUser.id).all()
 
@@ -455,7 +461,7 @@ def detail_event():
                 join(OrmEvent, OrmEvent.id == OrmParticipant.c.event_id). \
                 join(OrmCheck, OrmEvent.id == OrmCheck.event_id). \
                 outerjoin(OrmPay, and_(OrmCheck.id == OrmPay.check_id, OrmParticipant.c.person_id == OrmPay.person_id)). \
-                filter(OrmEvent.date.between(date_from, date_to)). \
+                filter(OrmEvent.id.in_(events_id)). \
                 group_by(OrmParticipant.c.person_id).order_by(OrmParticipant.c.person_id).all()
 
         sub_debt = db.session.query(func.avg(OrmItem.cost).label("costs"), func.sum(OrmDebt.sum).label("sums"),
@@ -463,7 +469,7 @@ def detail_event():
             join(OrmItem, OrmItem.id == OrmDebt.item_id). \
             join(OrmCheck, OrmCheck.id == OrmItem.check_id). \
             join(OrmEvent, OrmEvent.id == OrmCheck.event_id). \
-            filter(OrmEvent.date.between(date_from, date_to)). \
+            filter(OrmEvent.id.in_(events_id)). \
             group_by(OrmItem.id).subquery()
 
         categorical_debt = \
@@ -474,7 +480,7 @@ def detail_event():
                 join(OrmItem, OrmItem.check_id == OrmCheck.id). \
                 outerjoin(OrmDebt,
                           and_(OrmDebt.item_id == OrmItem.id, OrmDebt.person_id == OrmParticipant.c.person_id)). \
-                filter(and_(OrmEvent.date.between(date_from, date_to), sub_debt.c.id == OrmItem.id)). \
+                filter(and_(OrmEvent.id.in_(events_id), sub_debt.c.id == OrmItem.id)). \
                 group_by(OrmParticipant.c.person_id, OrmItem.category). \
                 order_by(OrmParticipant.c.person_id, OrmItem.category).all()
 
@@ -486,14 +492,14 @@ def detail_event():
                 join(OrmItem, OrmItem.check_id == OrmCheck.id). \
                 outerjoin(OrmDebt,
                           and_(OrmDebt.item_id == OrmItem.id, OrmDebt.person_id == OrmParticipant.c.person_id)). \
-                filter(and_(OrmEvent.date.between(date_from, date_to), sub_debt.c.id == OrmItem.id)). \
+                filter(and_(OrmEvent.id.in_(events_id), sub_debt.c.id == OrmItem.id)). \
                 group_by(OrmParticipant.c.person_id). \
                 order_by(OrmParticipant.c.person_id).all()
 
         categories = \
             db.session.query(OrmItem.category). \
                 join(OrmCheck, and_(OrmItem.check_id == OrmCheck.id)). \
-                join(OrmEvent, and_(OrmEvent.id == OrmCheck.event_id, OrmEvent.date.between(date_from, date_to))). \
+                join(OrmEvent, and_(OrmEvent.id == OrmCheck.event_id, OrmEvent.id.in_(events_id))). \
                 group_by(OrmItem.category).order_by(OrmItem.category).all()
 
         who_repay = \
@@ -502,7 +508,7 @@ def detail_event():
                 outerjoin(OrmRepay,
                           and_(OrmRepay.id_event == OrmEvent.id, OrmRepay.id_debt == OrmParticipant.c.person_id,
                                OrmRepay.active == True)). \
-                filter(OrmEvent.date.between(date_from, date_to)). \
+                filter(OrmEvent.id.in_(events_id)). \
                 group_by(OrmParticipant.c.person_id). \
                 order_by(OrmParticipant.c.person_id).all()
 
@@ -512,7 +518,7 @@ def detail_event():
                 outerjoin(OrmRepay,
                           and_(OrmRepay.id_event == OrmEvent.id, OrmRepay.id_repay == OrmParticipant.c.person_id,
                                OrmRepay.active == True)). \
-                filter(OrmEvent.date.between(date_from, date_to)). \
+                filter(OrmEvent.id.in_(events_id)). \
                 group_by(OrmParticipant.c.person_id). \
                 order_by(OrmParticipant.c.person_id).all()
 
@@ -520,14 +526,14 @@ def detail_event():
             join(OrmUser, OrmUser.id == OrmRepay.id_debt). \
             join(OrmEvent, OrmEvent.id == OrmRepay.id_event). \
             filter(and_(OrmRepay.id_repay == current_user.id, OrmRepay.active == False,
-                        OrmEvent.date.between(date_from, date_to))).all()
+                        OrmEvent.id.in_(events_id))).all()
 
         subquery1 = db.session.query(OrmRepay.id_debt.label("debt"), OrmRepay.id_repay.label("id"),
                                      OrmRepay.sum.label("sum"), OrmUser.name.label("name1"),
                                      OrmUser.surname.label("surname1")). \
             join(OrmUser, OrmUser.id == OrmRepay.id_debt). \
             join(OrmEvent, OrmEvent.id == OrmRepay.id_event). \
-            filter(and_(OrmRepay.active == True, OrmEvent.date.between(date_from, date_to))).subquery()
+            filter(and_(OrmRepay.active == True, OrmEvent.id.in_(events_id))).subquery()
 
         repay_all = db.session.query(subquery1.c.sum.label("sum"), OrmUser.name.label("name2"),
                                      OrmUser.surname.label("surname2"), subquery1.c.name1.label("name1"),
