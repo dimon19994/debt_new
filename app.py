@@ -445,7 +445,7 @@ def detail_event():
         events_id = \
             db.session.query(OrmEvent.id). \
                 join(OrmParticipant, OrmEvent.id == OrmParticipant.c.event_id). \
-                filter(and_(OrmEvent.date.between(date_from, date_to), OrmParticipant.c.person_id == 34)). \
+                filter(and_(OrmEvent.date.between(date_from, date_to), OrmParticipant.c.person_id == current_user.id)). \
                 group_by(OrmEvent.id)
 
         participant_id = \
