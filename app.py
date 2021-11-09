@@ -429,9 +429,8 @@ def detail_event():
             subquery1.c.debt).all()
 
     else:
+        form = EventUnionForm()
         if request.method == "POST":
-            form = EventUnionForm()
-
             result = db.session.query(OrmEvent).join(OrmParticipant).filter(
                 and_(OrmEvent.id == OrmParticipant.c.event_id, OrmParticipant.c.person_id == current_user.id)). \
                 order_by(OrmEvent.date.desc()).all()

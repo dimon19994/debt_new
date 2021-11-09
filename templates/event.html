@@ -15,7 +15,7 @@
                 <td> Объединение событий</td>
                 <td>
                     {{ form.start_date.label }}
-                    {{ form.start_date(class_="form-control") }}
+                    {{ form.start_date(class_="form-control event_daterange") }}
 
                     {% if form.start_date.errors %}
                         <div class="alert alert-danger" role="alert">
@@ -26,7 +26,7 @@
                     {% endif %}
                 </td>
                 <td> {{ form.end_date.label }}
-                    {{ form.end_date(class_="form-control") }}
+                    {{ form.end_date(class_="form-control event_daterange") }}
 
                     {% if form.end_date.errors %}
                         <div class="alert alert-danger" role="alert">
