@@ -17,11 +17,10 @@ from forms.person_form import PersonForm
 from forms.repay_form import RepayForm
 from forms.event_union_form import EventUnionForm
 
+from config import URL
+
 app = Flask(__name__)
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:01200120@localhost/debt_manager'
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgres://vwgdncthqvrfxu:" \
-                                        "4e44983fca331d02098c0208b79b45579ec69a15c7085765e6fae7e994d864c8@" \
-                                        "ec2-34-233-226-84.compute-1.amazonaws.com:5432/d4b55fh4te2e3h"
+app.config['SQLALCHEMY_DATABASE_URI'] = URL
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECURITY_RECOVERABLE'] = True
 
