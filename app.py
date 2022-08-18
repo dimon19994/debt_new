@@ -702,7 +702,7 @@ def checks():
         join(OrmEvent, OrmEvent.id == OrmCheck.event_id). \
         join(OrmParticipant, OrmParticipant.c.event_id == OrmEvent.id). \
         join(OrmUser, OrmParticipant.c.person_id == OrmUser.id).filter(OrmUser.id == current_user.id). \
-        order_by(OrmEvent.date.desc(), OrmCheck.id).all()
+        order_by(OrmEvent.date.desc(), OrmCheck.id.desc()).all()
 
     return render_template('check.html', checks=result)
 
